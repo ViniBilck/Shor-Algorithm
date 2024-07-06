@@ -9,7 +9,7 @@ class Shor:
         self.factored = self.shor(self.number_to_be_factored)
 
 
-    def inverse_qft(self, qubits: Quant, invert: bool = True):
+    def inverse_qft(self, qubits, invert: bool = True):
         if len(qubits) == 1:
             H(qubits)
         else:
