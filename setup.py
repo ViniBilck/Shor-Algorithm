@@ -12,7 +12,7 @@ setup(
     version="0.1",
     packages=['shor'],
     package_data=package_data,
-    scripts=['bin/factor'],
+    scripts=['bin/shors_algorithm'],
     description="Shor-Algorithm",
     author="Vinicius L Bilck",
     author_email="bilck.vinicius1998@gmail.com",
