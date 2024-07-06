@@ -57,5 +57,7 @@ class Shor:
         return factor_number, 'prime or fail'
 
 if __name__ == "__main__":
-    shor = Shor(10)  # Update with your serial port
-    print(shor.factored)
+    N = 10
+    shor = Shor(N)
+    factor, message = shor.factored
+    print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
