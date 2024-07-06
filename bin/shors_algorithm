@@ -1,0 +1,8 @@
+from shor.shor import Shor
+
+def main():
+    a = Shor(10).factored()
+    print(a)
+
+if __name__ == '__main__':
+    main()
