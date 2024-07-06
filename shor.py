@@ -55,3 +55,7 @@ class Shor:
                 continue
 
         return factor_number, 'prime or fail'
+
+if __name__ == "__main__":
+    shor = Shor(10)  # Update with your serial port
+    shor.factored()
