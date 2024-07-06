@@ -58,4 +58,4 @@ class Shor:
 
 if __name__ == "__main__":
     shor = Shor(10)  # Update with your serial port
-    print(shor.factored())
+    print(shor.factored)
