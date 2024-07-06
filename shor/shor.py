@@ -1,15 +1,15 @@
 from math import gcd, pi
 from random import randint
 from functools import reduce
-from ket import *
+from ket import H, PHASE, SWAP, Process, X, adj, measure, ctrl
 
 class Shor:
-    def __init__(self, number_to_be_factored: int):
+    def __init__(self, number_to_be_factored):
         self.number_to_be_factored = number_to_be_factored
         self.factored = self.shor(self.number_to_be_factored)
 
 
-    def inverse_qft(self, qubits, invert: bool = True):
+    def inverse_qft(self, qubits, invert = True):
         if len(qubits) == 1:
             H(qubits)
         else:
@@ -55,4 +55,3 @@ class Shor:
                 continue
 
         return factor_number, 'prime or fail'
-
