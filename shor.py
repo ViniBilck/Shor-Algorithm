@@ -11,14 +11,16 @@ class Shor:
 
     def inverse_qft(self, qubits):
         n = len(qubits)
-        for i in range(n // 2):
-            SWAP(qubits[i], qubits[n - i - 1])
-        for i in range(n):
-            H(qubits[i])
-            for j in range(i + 1, n):
-                angle = -pi / (2 ** (j - i))
-                ctrl(qubits[j], PHASE(angle))(qubits[i])
-
+        if len(qubits) != 1:
+            for i in range(n // 2):
+                SWAP(qubits[i], qubits[n - i - 1])
+            for i in range(n):
+                H(qubits[i])
+                for j in range(i + 1, n):
+                    angle = -pi / (2 ** (j - i))
+                    ctrl(qubits[j], PHASE(angle))(qubits[i])
+        else:
+            H(qubits)
     def quantum_subroutine(self, qbits_number):
         process = Process()
         qubits = process.alloc(qbits_number)
@@ -37,7 +39,6 @@ class Shor:
             rr = reduce(gcd, [self.quantum_subroutine(number_of_qbits) for _ in range(number_of_qbits)])
             try:
                 r = 2 ** number_of_qbits // rr
-                # novo processamento clássico
                 if r % 2 == 0:
                     x_r_over_2 = pow(x, r // 2, factor_number)
                     if x_r_over_2 != factor_number - 1:
@@ -54,7 +55,7 @@ class Shor:
         return factor_number, 'prime or fail'
 
 if __name__ == "__main__":
-    N = 13680
+    N = 28
     shor = Shor(N)
     factor, message = shor.factored
     print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
