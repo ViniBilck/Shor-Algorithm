@@ -2,6 +2,10 @@ from math import gcd, pi
 from random import randint
 from functools import reduce
 from ket import H, PHASE, SWAP, Process, X, adj, measure, ctrl
+import argparse
+import configparser
+import os
+
 
 class Shor:
     def __init__(self, number_to_be_factored):
@@ -56,7 +60,24 @@ class Shor:
         return factor_number, 'prime or fail'
 
 if __name__ == "__main__":
-    N = 28
-    shor = Shor(N)
-    factor, message = shor.factored
-    print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", help="", dest='config_file', default='config.ini', type=str)
+    args = parser.parse_args()
+    _dir = os.path.realpath('.')
+    config = configparser.ConfigParser(defaults={'here': _dir})
+    config.read(args.config_file)
+    data = (config.get("Settings", "number"))
+    if "..." in data:
+        data = [int(numbers) for numbers in (config.get("Settings", "number")).split('...')]
+        for result in range(data[0], data[1] + 1):
+            N = result
+            shor = Shor(N)
+            factor, message = shor.factored
+            print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
+    else:
+        numbers = [int(numbers) for numbers in (config.get("Settings", "number")).split(',')]
+        for result in numbers:
+            N = result
+            shor = Shor(N)
+            factor, message = shor.factored
+            print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
