@@ -21,6 +21,7 @@ class Shor:
                     ctrl(qubits[j], PHASE(angle))(qubits[i])
         else:
             H(qubits)
+
     def quantum_subroutine(self, qbits_number):
         process = Process()
         qubits = process.alloc(qbits_number)
