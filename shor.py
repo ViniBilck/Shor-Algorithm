@@ -32,7 +32,7 @@ class Shor:
         reg1 = H(qubits)
         reg2 = X(reg1[-1])
         measure(reg2)
-        adj(self.inverse_qft)(reg1)
+        self.inverse_qft(reg1)
         return measure(reg1).value
 
 
