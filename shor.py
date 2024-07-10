@@ -42,22 +42,24 @@ class Shor:
             rr = reduce(gcd, [self.quantum_subroutine(number_of_qbits) for _ in range(number_of_qbits)])
             try:
                 r = 2 ** number_of_qbits // rr
-                # classical processing
-                if r % 2 == 0 and pow(x, r // 2) != -1 % factor_number:
-                    p = gcd(x ** (r // 2) - 1, factor_number)
-                    if p != 1 and p != factor_number and p * factor_number // p == factor_number:
-                        return p, 'quantum'
+                # novo processamento clássico
+                if r % 2 == 0:
+                    x_r_over_2 = pow(x, r // 2, factor_number)
+                    if x_r_over_2 != factor_number - 1:
+                        p = gcd(x_r_over_2 - 1, factor_number)
+                        if p != 1 and p != factor_number:
+                            return p, 'quantum'
 
-                    q = gcd(x ** (r // 2) + 1, factor_number)
-                    if q != 1 and q != factor_number and q * factor_number // q == factor_number:
-                        return q, 'quantum'
+                        q = gcd(x_r_over_2 + 1, factor_number)
+                        if q != 1 and q != factor_number:
+                            return q, 'quantum'
             except:
                 continue
 
         return factor_number, 'prime or fail'
 
 if __name__ == "__main__":
-    N = 10
+    N = 13680
     shor = Shor(N)
     factor, message = shor.factored
     print(f'N: {N:2} = {factor:2} * {N // factor:2} ({message})')
