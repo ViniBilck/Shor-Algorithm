@@ -9,20 +9,15 @@ class Shor:
         self.factored = self.shor(self.number_to_be_factored)
 
 
-    def inverse_qft(self, qubits, invert = True):
-        if len(qubits) == 1:
-            H(qubits)
-        else:
-            *head, tail = qubits
-            H(tail)
-            for i, ctrl_qubit in enumerate(reversed(head)):
-                ctrl(ctrl_qubit, PHASE(pi / 2 ** (i + 1)))(tail)
-            self.inverse_qft(head, invert=False)
-
-        if invert:
-            size = len(qubits)
-            for i in range(size // 2):
-                SWAP(qubits[i], qubits[size - i - 1])
+    def inverse_qft(self, qubits):
+        n = len(qubits)
+        for i in range(n // 2):
+            SWAP(qubits[i], qubits[n - i - 1])
+        for i in range(n):
+            H(qubits[i])
+            for j in range(i + 1, n):
+                angle = -pi / (2 ** (j - i))
+                ctrl(qubits[j], PHASE(angle))(qubits[i])
 
     def quantum_subroutine(self, qbits_number):
         process = Process()
