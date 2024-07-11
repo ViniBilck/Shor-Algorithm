@@ -29,13 +29,10 @@ class Shor:
         return pow(base, exponent, modulus)
 
     def u_exp(self, control_qubit, target_qubits, a, modulus, exponent):
-        def U():
-            result = self.modular_exponentiation(a, exponent, modulus)
-            for i in range(len(target_qubits)):
-                if (result >> i) & 1:
-                    X(target_qubits[i])
-        
-        ctrl(control_qubit, U)()
+        result = self.modular_exponentiation(a, exponent, modulus)
+        for i in range(len(target_qubits)):
+            if (result >> i) & 1:
+                ctrl(control_qubit, X)(target_qubits[i])
 
     def quantum_subroutine(self, qbits_number, base, modulus):
         process = Process()
