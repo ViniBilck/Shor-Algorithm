@@ -12,7 +12,6 @@ class Shor:
         self.number_to_be_factored = number_to_be_factored
         self.factored = self.shor(self.number_to_be_factored)
 
-
     def inverse_qft(self, qubits):
         n = len(qubits)
         if len(qubits) != 1:
@@ -26,22 +25,38 @@ class Shor:
         else:
             H(qubits)
 
-    def quantum_subroutine(self, qbits_number):
-        process = Process()
-        qubits = process.alloc(qbits_number)
-        reg1 = H(qubits)
-        reg2 = X(reg1[-1])
-        measure(reg2)
-        self.inverse_qft(reg1)
-        return measure(reg1).value
+    def modular_exponentiation(self, base, exponent, modulus):
+        return pow(base, exponent, modulus)
 
+    def u_exp(self, control_qubit, target_qubits, a, modulus, exponent):
+        def U():
+            result = self.modular_exponentiation(a, exponent, modulus)
+            for i in range(len(target_qubits)):
+                if (result >> i) & 1:
+                    X(target_qubits[i])
+        
+        ctrl(control_qubit, U)()
+
+    def quantum_subroutine(self, qbits_number, base, modulus):
+        process = Process()
+        control_qubits = process.alloc(qbits_number)
+        target_qubits = process.alloc(modulus.bit_length())
+
+        for qubit in control_qubits:
+            H(qubit)
+
+        for i, qubit in enumerate(control_qubits):
+            self.u_exp(qubit, target_qubits, base, modulus, 2**i)
+
+        adj(self.inverse_qft)(control_qubits)
+        return measure(control_qubits).value
 
     def shor(self, factor_number):
         number_of_qbits = factor_number.bit_length()
 
         for _ in range(number_of_qbits):
             x = randint(2, factor_number - 1)
-            rr = reduce(gcd, [self.quantum_subroutine(number_of_qbits) for _ in range(number_of_qbits)])
+            rr = reduce(gcd, [self.quantum_subroutine(number_of_qbits, x, factor_number) for _ in range(number_of_qbits)])
             try:
                 r = 2 ** number_of_qbits // rr
                 if r % 2 == 0:
